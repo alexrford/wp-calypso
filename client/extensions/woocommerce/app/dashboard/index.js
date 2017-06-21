@@ -14,7 +14,8 @@ import { fetchSetupChoices } from 'woocommerce/state/sites/setup-choices/actions
 import {
 	areSetupChoicesLoading,
 	getFinishedInitialSetup,
-	getSetStoreAddressDuringInitialSetup
+	getSetStoreAddressDuringInitialSetup,
+	getFinishedInstallOfRequiredPlugins,
 } from 'woocommerce/state/sites/setup-choices/selectors';
 import { getSelectedSiteWithFallback } from 'woocommerce/state/sites/selectors';
 import Main from 'components/main';
@@ -22,6 +23,7 @@ import ManageNoOrdersView from './manage-no-orders-view';
 import ManageOrdersView from './manage-orders-view';
 import PreSetupView from './pre-setup-view';
 import SetupTasksView from './setup-tasks-view';
+import RequiredPluginsInstallView from './required-plugins-install-view';
 
 class Dashboard extends Component {
 
@@ -53,7 +55,17 @@ class Dashboard extends Component {
 	}
 
 	renderDashboardContent = () => {
-		const { finishedInitialSetup, hasOrders, selectedSite, setStoreAddressDuringInitialSetup } = this.props;
+		const {
+			finishedInstallOfRequiredPlugins,
+			finishedInitialSetup,
+			hasOrders,
+			selectedSite,
+			setStoreAddressDuringInitialSetup,
+		} = this.props;
+
+		if ( ! finishedInstallOfRequiredPlugins ) {
+			return ( <RequiredPluginsInstallView site={ selectedSite } /> );
+		}
 
 		if ( ! setStoreAddressDuringInitialSetup ) {
 			return ( <PreSetupView site={ selectedSite } /> );
@@ -90,6 +102,7 @@ class Dashboard extends Component {
 function mapStateToProps( state ) {
 	return {
 		finishedInitialSetup: getFinishedInitialSetup( state ),
+		finishedInstallOfRequiredPlugins: getFinishedInstallOfRequiredPlugins( state ),
 		hasOrders: false, // TODO - connect to a selector when it becomes available
 		loading: areSetupChoicesLoading( state ),
 		selectedSite: getSelectedSiteWithFallback( state ),
