@@ -41,6 +41,7 @@ export class CommentDetail extends Component {
 		repliedToComment: PropTypes.bool,
 		setCommentStatus: PropTypes.func,
 		siteId: PropTypes.number,
+		submitComment: PropTypes.func,
 		toggleCommentLike: PropTypes.func,
 		toggleCommentSelected: PropTypes.func,
 	};
@@ -117,6 +118,7 @@ export class CommentDetail extends Component {
 			authorUsername,
 			commentContent,
 			commentDate,
+			commentId,
 			commentIsLiked,
 			commentIsSelected,
 			commentStatus,
@@ -126,6 +128,7 @@ export class CommentDetail extends Component {
 			postUrl,
 			repliedToComment,
 			siteId,
+			submitComment,
 		} = this.props;
 
 		const {
@@ -188,7 +191,11 @@ export class CommentDetail extends Component {
 							commentDate={ commentDate }
 							repliedToComment={ repliedToComment }
 						/>
-						<CommentDetailReply />
+						<CommentDetailReply
+							commentId={ commentId }
+							postTitle={ postTitle }
+							submitComment={ submitComment }
+						/>
 					</div>
 				}
 			</Card>
