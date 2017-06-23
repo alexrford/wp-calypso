@@ -8,6 +8,8 @@ import {
 	WOOCOMMERCE_CURRENCY_UPDATE_SUCCESS,
 	WOOCOMMERCE_SETTINGS_GENERAL_REQUEST,
 	WOOCOMMERCE_SETTINGS_GENERAL_REQUEST_SUCCESS,
+	WOOCOMMERCE_STORE_ADDRESS_UPDATE,
+	WOOCOMMERCE_STORE_ADDRESS_UPDATE_SUCCESS,
 } from 'woocommerce/state/action-types';
 
 // TODO: Handle error
@@ -34,5 +36,20 @@ export default createReducer( {}, {
 
 	[ WOOCOMMERCE_SETTINGS_GENERAL_REQUEST_SUCCESS ]: ( state, { data } ) => {
 		return data;
+	},
+
+	[ WOOCOMMERCE_STORE_ADDRESS_UPDATE ]: ( state ) => {
+		return state;
+	},
+
+	[ WOOCOMMERCE_STORE_ADDRESS_UPDATE_SUCCESS ]: ( state, { data } ) => {
+		const settings = state || [];
+		const newSettings = settings.map( ( setting ) => {
+			if ( setting.id === data.id ) {
+				return data;
+			}
+			return setting;
+		} );
+		return newSettings;
 	},
 } );
