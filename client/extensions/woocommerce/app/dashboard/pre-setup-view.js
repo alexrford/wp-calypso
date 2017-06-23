@@ -131,14 +131,17 @@ class PreSetupView extends Component {
 }
 
 function mapStateToProps( state ) {
-	const name = getSiteTitle( state ) || '';
+	const site = getSelectedSiteWithFallback( state );
+	let name = '';
+	if ( site ) {
+		name = getSiteTitle( state, site.ID );
+	}
 	const storeLocation = getStoreLocation( state );
 	const address = {
 		name,
 		...storeLocation,
 	};
 	const loading = areSettingsGeneralLoading( state );
-	const site = getSelectedSiteWithFallback( state );
 
 	return {
 		address,
