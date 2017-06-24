@@ -106,6 +106,53 @@ describe( 'handlers', () => {
 			expect( store.dispatch ).to.have.been.calledWith( actionListStepFailure( actionListAfter, fxt.stepEError ) );
 		} );
 
+		it( 'should pass data from one step to future steps', () => {
+			const data = { one: 1, two: 2, three: 3 };
+
+			const step1 = { description: 'Get Data', onStep: ( dispatch, actionList ) => {
+				const newActionList = {
+					...actionList,
+					data
+				};
+
+				dispatch( { type: '%% get data %%', data } );
+				dispatch( actionListStepSuccess( newActionList ) );
+			} };
+
+			const step2 = { description: 'Use Data', onStep: ( dispatch, actionList ) => {
+				dispatch( { type: '%% use data %%', data } );
+				dispatch( actionListStepSuccess( actionList ) );
+			} };
+
+			const actionList = {
+				nextSteps: [ step1, step2 ],
+			};
+
+			handleStepNext( store, actionListStepNext( actionList ) );
+
+			const getData = store.dispatch.firstCall.args[ 0 ];
+			expect( getData.type ).to.equal( '%% get data %%' );
+
+			const step1Success = store.dispatch.secondCall.args[ 0 ];
+			expect( step1Success.actionList.currentStep.description ).to.equal( 'Get Data' );
+			expect( step1Success.actionList.data ).to.equal( data );
+
+			store.dispatch = spy();
+			handleStepSuccess( store, step1Success );
+
+			const step1Next = store.dispatch.firstCall.args[ 0 ];
+			expect( step1Next.actionList.currentStep ).to.be.null;
+
+			store.dispatch = spy();
+			handleStepNext( store, step1Next );
+
+			const useData = store.dispatch.firstCall.args[ 0 ];
+			expect( useData.data ).to.equal( data );
+
+			const step2Success = store.dispatch.secondCall.args[ 0 ];
+			expect( step2Success.actionList.data ).to.equal( data );
+		} );
+
 		it( 'should ignore a next request while a current step is still running.', () => {
 			const actionList = {
 				prevSteps: [],
@@ -183,6 +230,7 @@ describe( 'handlers', () => {
 				prevSteps: [ fxt.stepASuccessful, fxt.stepBSuccessful, fxt.stepCSuccessful ],
 				currentStep: null,
 				nextSteps: [],
+				onSuccess,
 			};
 
 			handleStepSuccess( store, actionListStepSuccess( actionListBefore ), fxt.time.stepCEnd );
@@ -222,6 +270,7 @@ describe( 'handlers', () => {
 				prevSteps: [ fxt.stepASuccessful, fxt.stepEFailed ],
 				currentStep: null,
 				nextSteps: [ fxt.stepC ],
+				onFailure,
 			};
 
 			handleStepFailure( store, actionListStepFailure( actionListBefore, fxt.stepEError ), fxt.time.stepEEnd );

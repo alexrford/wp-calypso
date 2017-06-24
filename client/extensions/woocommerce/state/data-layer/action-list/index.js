@@ -38,6 +38,7 @@ export function handleStepNext( { dispatch }, action, now = Date.now() ) {
 	}
 
 	const nextActionList = {
+		...actionList,
 		prevSteps,
 		currentStep: { ...nextStep, startTime: now },
 		nextSteps: remainingSteps,
@@ -56,7 +57,8 @@ export function handleStepSuccess( { dispatch }, action, now = Date.now() ) {
 	}
 
 	const nextActionList = {
-		prevSteps: [ ...prevSteps, { ...currentStep, endTime: now } ],
+		...actionList,
+		prevSteps: [ ...( prevSteps || [] ), { ...currentStep, endTime: now } ],
 		currentStep: null,
 		nextSteps,
 	};
@@ -78,7 +80,8 @@ export function handleStepFailure( { dispatch, getState }, action, now = Date.no
 
 	if ( actionList.onFailure ) {
 		const nextActionList = {
-			prevSteps: [ ...prevSteps, { ...currentStep, endTime: now, error } ],
+			...actionList,
+			prevSteps: [ ...( prevSteps || [] ), { ...currentStep, endTime: now, error } ],
 			currentStep: null,
 			nextSteps,
 		};
