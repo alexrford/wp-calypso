@@ -1,54 +1,50 @@
 /**
+ * External dependencies
+ */
+import { pick } from 'lodash';
+
+/**
  * Internal dependencies
  */
 import { createReducer } from 'state/utils';
 import {
-	WOOCOMMERCE_ACTION_LIST_ANNOTATE,
-	WOOCOMMERCE_ACTION_LIST_CREATE,
-	WOOCOMMERCE_ACTION_LIST_CLEAR,
+	WOOCOMMERCE_ACTION_LIST_STEP_NEXT,
+	WOOCOMMERCE_ACTION_LIST_STEP_SUCCESS,
+	WOOCOMMERCE_ACTION_LIST_STEP_FAILURE,
 } from 'woocommerce/state/action-types';
 
 export default createReducer( null, {
-	[ WOOCOMMERCE_ACTION_LIST_CREATE ]: handleActionListCreate,
-	[ WOOCOMMERCE_ACTION_LIST_CLEAR ]: handleActionListClear,
-	[ WOOCOMMERCE_ACTION_LIST_ANNOTATE ]: handleActionListAnnotate,
+	[ WOOCOMMERCE_ACTION_LIST_STEP_NEXT ]: handleNext,
+	[ WOOCOMMERCE_ACTION_LIST_STEP_SUCCESS ]: handleSuccess,
+	[ WOOCOMMERCE_ACTION_LIST_STEP_FAILURE ]: clearActionList,
 } );
 
-function handleActionListCreate( actionList, action ) {
-	// The action list given in the action is our new list.
-	// TODO: validate action list?
-	return action.actionList;
+function handleNext( actionList, action ) {
+	return updateActionList( actionList, action );
 }
 
-function handleActionListClear() {
-	// Clear out the existing action list.
-	return null;
-}
+function handleSuccess( actionList, action ) {
+	const { nextSteps } = action.actionList;
 
-function handleActionListAnnotate( actionList, action ) {
-	const { stepIndex, annotations } = action;
-
-	if ( actionList && undefined !== typeof stepIndex ) {
-		const { startTime, endTime, error } = annotations;
-		const step = actionList.steps[ stepIndex ];
-
-		const newStep = { ...step };
-
-		if ( startTime ) {
-			newStep.startTime = startTime;
-		}
-		if ( endTime ) {
-			newStep.endTime = endTime;
-		}
-		if ( error ) {
-			newStep.error = error;
-		}
-
-		const newSteps = [ ...actionList.steps ];
-		newSteps[ stepIndex ] = newStep;
-		return { ...actionList, steps: newSteps };
+	if ( nextSteps && nextSteps.length > 0 ) {
+		return updateActionList( actionList, action );
 	}
 
-	return actionList;
+	return clearActionList();
+}
+
+function updateActionList( actionList, action ) {
+	const { prevSteps, currentStep, nextSteps } = action.actionList;
+	const pickNames = [ 'description', 'startTime', 'endTime' ];
+
+	return {
+		prevSteps: prevSteps.map( ( step ) => pick( step, pickNames ) ),
+		currentStep: ( currentStep ? pick( currentStep, pickNames ) : null ),
+		nextSteps: nextSteps.map( ( step ) => pick( step, pickNames ) ),
+	};
+}
+
+function clearActionList() {
+	return null;
 }
 
