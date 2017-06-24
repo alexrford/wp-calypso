@@ -2,8 +2,7 @@
  * External dependencies
  */
 import { find } from 'lodash';
-import debugFactory from 'debug';
-const debug = debugFactory( 'calypso:allendav' );
+
 /**
  * Internal dependencies
  */
@@ -51,10 +50,6 @@ export default createReducer( {}, {
 	[ WOOCOMMERCE_SETTINGS_GENERAL_BATCH_REQUEST_SUCCESS ]: ( state, { data } ) => {
 		const settings = state || [];
 
-		debug( 'in general_batch_request_success' );
-		debug( 'state=', state );
-		debug( 'updates=', data.update );
-
 		// go through each existing setting
 		// if an update is present in data, replace the setting with the update
 		const newSettings = settings.map( ( setting ) => {
@@ -71,8 +66,6 @@ export default createReducer( {}, {
 				newSettings.push( update );
 			}
 		} );
-
-		debug( 'newSettings=', newSettings );
 
 		return newSettings;
 	},
