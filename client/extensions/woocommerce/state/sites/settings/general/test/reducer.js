@@ -48,6 +48,13 @@ describe( 'reducer', () => {
 	describe( 'addressUpdateRequest', () => {
 		it( 'should merge data from the action', () => {
 			const siteId = 123;
+			const emptyState = {
+				123: {
+					settings: {
+						general: []
+					}
+				}
+			};
 			const streetSetting = {
 				id: 'woocommerce_store_address',
 				value: '311 Maple St',
@@ -74,8 +81,7 @@ describe( 'reducer', () => {
 				siteId,
 				data: { update: [ updatedStreetSetting ] },
 			};
-			const state = reducer( {}, action );
-
+			const state = reducer( emptyState, action );
 			const updatedState = reducer( state, updateAction );
 			expect( updatedState[ siteId ] ).to.exist;
 			expect( updatedState[ siteId ].settings ).to.exist;
