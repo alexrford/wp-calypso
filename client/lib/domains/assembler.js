@@ -28,6 +28,7 @@ function createDomainObjects( dataTransferObject ) {
 			expirySoon: domain.expiry_soon,
 			googleAppsSubscription: assembleGoogleAppsSubscription( domain.google_apps_subscription ),
 			hasPrivacyProtection: domain.has_private_registration,
+			hasZone: domain.has_zone,
 			isAutoRenewing: domain.auto_renewing,
 			isPendingIcannVerification: domain.is_pending_icann_verification,
 			isPrimary: domain.primary_domain,
@@ -36,11 +37,11 @@ function createDomainObjects( dataTransferObject ) {
 			owner: domain.owner,
 			privateDomain: domain.private_domain,
 			pendingTransfer: domain.pending_transfer,
+			pointsToWpcom: domain.points_to_wpcom,
 			registrar: domain.registrar,
 			registrationMoment: domain.registration_date && i18n.moment( domain.registration_date ),
-			hasZone: domain.has_zone,
-			pointsToWpcom: domain.points_to_wpcom,
-			type: getDomainType( domain )
+			subscriptionId: domain.subscription_id,
+			type: getDomainType( domain ),
 		};
 	} );
 

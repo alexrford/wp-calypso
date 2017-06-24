@@ -213,6 +213,9 @@ const RegisteredDomain = React.createClass( {
 						</Property>
 
 						<SubscriptionSettings
+							type={ domain.type }
+							subscriptionId={ domain.subscriptionId }
+							siteSlug={ this.props.selectedSite.slug }
 							onClick={ this.handlePaymentSettingsClick } />
 					</Card>
 
