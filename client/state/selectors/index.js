@@ -219,3 +219,4 @@ export isValidatingAccountRecoveryKey from './is-validating-account-recovery-key
 export prependThemeFilterKeys from './prepend-theme-filter-keys';
 export shouldShowVideoEditorError from './should-show-video-editor-error';
 export shouldSyncReaderFollows from './should-sync-reader-follows';
+export userCanManagePlugins from './user-can-manage-plugins';
