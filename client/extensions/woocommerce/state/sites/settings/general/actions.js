@@ -11,10 +11,10 @@ import { setError } from '../../status/wc-api/actions';
 import {
 	WOOCOMMERCE_CURRENCY_UPDATE,
 	WOOCOMMERCE_CURRENCY_UPDATE_SUCCESS,
+	WOOCOMMERCE_SETTINGS_GENERAL_BATCH_REQUEST,
+	WOOCOMMERCE_SETTINGS_GENERAL_BATCH_REQUEST_SUCCESS,
 	WOOCOMMERCE_SETTINGS_GENERAL_REQUEST,
 	WOOCOMMERCE_SETTINGS_GENERAL_REQUEST_SUCCESS,
-	WOOCOMMERCE_STORE_ADDRESS_UPDATE,
-	WOOCOMMERCE_STORE_ADDRESS_UPDATE_SUCCESS,
 } from 'woocommerce/state/action-types';
 
 export const fetchSettingsGeneral = ( siteId ) => ( dispatch, getState ) => {
@@ -87,7 +87,7 @@ export const saveCurrency = (
 
 const updateStoreAddressSuccess = ( siteId, data ) => {
 	return {
-		type: WOOCOMMERCE_STORE_ADDRESS_UPDATE_SUCCESS,
+		type: WOOCOMMERCE_SETTINGS_GENERAL_BATCH_REQUEST_SUCCESS,
 		siteId,
 		data,
 	};
@@ -109,7 +109,7 @@ export const updateStoreAddress = (
 		siteId = getSelectedSiteId( state );
 	}
 	const updateAction = {
-		type: WOOCOMMERCE_STORE_ADDRESS_UPDATE,
+		type: WOOCOMMERCE_SETTINGS_GENERAL_BATCH_REQUEST,
 		siteId,
 	};
 
